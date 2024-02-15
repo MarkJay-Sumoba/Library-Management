@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <title>Add/Edit Book</title>
+</head>
+
+<body>
+<!-- Header -->
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid d-flex justify-content-between">
+      <a class="btn btn-outline-light text-uppercase" th:href="@{/books/list}">
+        <i class="bi bi-book "></i> Mark's Library
+      </a>
+
+      <!-- User in session -->
+      <div class="row d-flex align-items-center">
+          <i class="bi bi-person text-white"></i>  <span class="text-white text-uppercase mx-1 navbar-brand" sec:authentication="principal.username"></span>
+
+        <!-- Logout -->
+        <form class="text-center" action="#" th:action="@{/logout}" method="POST">
+          <button class="btn btn-outline-light" style="width:100px;" type="submit">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="container d-flex justify-content-center align-items-center">
+  <div class="col-lg-6 col-lg-offset-4 my-5">
+    <div class="card border-dark">
+      <div class="card-header bg-warning text-center">
+        <h2 class="text-uppercase">Add/Edit Book</h2>
+      </div>
+
+      <div class="card-body">
+        <div class="card-text">
+          <form th:object="${book}" th:action="@{/books/save}" method="POST">
+
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-group">
+              <label for="title">Title:</label>
+              <input type="text" class="form-control w-100" id="title" th:field="*{title}">
+              <span class="text-danger" th:errors="*{title}"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="author">Author:</label>
+              <input type="text" class="form-control w-100" id="author" th:field="*{author}">
+              <span class="text-danger" th:errors="*{author}"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="isbn">ISBN:</label>
+              <input type="text" class="form-control w-100" id="isbn" th:field="*{isbn}">
+              <span class="text-danger" th:errors="*{isbn}"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select class="form-control w-100" id="status" th:field="*{status}" required>
+                <option value="AVAILABLE" th:selected="${book.status == 'AVAILABLE'}">Available</option>
+                <option value="CHECKED-OUT" th:selected="${book.status == 'CHECKED-OUT'}">Checked-Out</option>
+              </select>
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <button type="submit" class="btn btn-success btn-lg mt-3">Save</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-dark mt-4 py-2 text-white">
+  <div class="container-fluid text-center">
+    <p>&copy; 2023-12-02 Programming 3 Class Project</p>
+  </div>
+</footer>
+
+</body>
+
+</html>

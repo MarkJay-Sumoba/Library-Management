@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Book List</title>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-uppercase" th:href="@{/books/list}">
+                <i class="bi bi-book"></i> Mark's Library
+            </a>
+
+        <!-- Search Bar -->
+        <form class="form-inline my-2 my-lg-0" th:action="@{/books/search}" method="GET">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="keyword" th:value="${param.keyword}">
+            <button class="btn btn-outline-light my-2 my-lg-0" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+            <!-- User in session -->
+            <div class="row d-flex align-items-center ">
+                    <i class="bi bi-person text-white"></i>  <span class="text-white text-uppercase mx-1 navbar-brand" sec:authentication="principal.username"></span>
+
+        <!-- Logout -->
+        <form class="text-center" action="#" th:action="@{/logout}" method="POST">
+            <button class="btn btn-outline-light" style="width:100px;" type="submit">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+        </form>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="text-center">
+    <h1 class="mt-4 text-uppercase">Book List</h1>
+
+    <!-- Add Button -->
+    <a th:href="@{/books/add}" class="btn btn-primary my-3"><i class="bi bi-journal-plus"></i> Add Book</a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr class="bg-dark text-white">
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.isbn}"></td>
+            <td th:text="${book.status}"></td>
+            <td>
+                <!-- Edit Button -->
+                <a th:href="@{/books/edit(bookId=${book.id})}" class="btn btn-sm btn-primary my-2"><i class="bi bi-pencil"></i> Edit</a>
+
+                <!-- Delete Button -->
+                <div th:if="${#authorization.expression('hasRole(''MANAGER'') or hasRole(''ADMIN'')')}">
+                <a th:href="@{/books/delete(bookId=${book.id})}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure you want to delete this book?')"><i class="bi bi-trash"></i> Delete</a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+<hr>
+
+</div>
+
+<footer>
+    <div class="container-fluid bg-dark mt-4 py-2 text-white text-center">
+        <h3>Forum</h3>
+            <a class="mx-4" th:href="@{/users/managers}">Managers Forum</a>
+            <a th:href="@{/users/admins}">Administrators Forum</a>
+        <hr>
+        <p>&copy; 2023-12-02 Programming 3 Class Project</p>
+    </div>
+</footer>
+
+</body>
+</html>
